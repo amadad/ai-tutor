@@ -29,22 +29,9 @@
 		069080562C9A03240059F93D /* ai tutorsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ai tutorsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		069080762C9A06BF0059F93D /* Exceptions for "ai tutors" folder in "ai tutors" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"ai-tutors-Info.plist",
-			);
-			target = 0690803B2C9A03230059F93D /* ai tutors */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0690803E2C9A03230059F93D /* ai tutors */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				069080762C9A06BF0059F93D /* Exceptions for "ai tutors" folder in "ai tutors" target */,
-			);
 			path = "ai tutors";
 			sourceTree = "<group>";
 		};

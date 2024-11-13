@@ -2,61 +2,58 @@ import SwiftUI
 import AVFoundation
 
 struct HomeView: View {
-    @StateObject private var viewModel = CameraViewModel()
-    @State private var isImageReviewPresented = false
-
+    @StateObject private var cameraViewModel = CameraViewModel()
+    @State private var showingImageReview = false
+    @State private var capturedImage: UIImage?
+    
     var body: some View {
         ZStack {
-            CameraPreviewView(session: viewModel.session)
+            CameraPreview(session: cameraViewModel.session)
                 .edgesIgnoringSafeArea(.all)
-
+            
             VStack {
                 Text("Take a pic of your homework")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .font(.headline)
                     .padding()
-                    .background(Color.black.opacity(0.6))
+                    .background(Color.black.opacity(0.7))
+                    .foregroundColor(.white)
                     .cornerRadius(10)
-                    .padding(.top, 50)
-
+                
                 Spacer()
-
-                Button(action: {
-                    viewModel.capturePhoto()
-                    isImageReviewPresented = true
-                }) {
-                    Image(systemName: "camera.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.white)
-                        .background(Color.black.opacity(0.6))
+                
+                Button(action: capturePhoto) {
+                    Image(systemName: "camera")
+                        .font(.largeTitle)
+                        .padding()
+                        .background(Color.white)
                         .clipShape(Circle())
                 }
-                .padding(.bottom, 50)
+                .padding(.bottom)
             }
         }
-        .onAppear(perform: viewModel.startCameraSession)
-        .sheet(isPresented: $isImageReviewPresented) {
-            if let capturedImage = viewModel.capturedImage {
-                ImageReviewView(image: capturedImage)
+        .onAppear {
+            cameraViewModel.checkCameraPermissions()
+        }
+        .fullScreenCover(isPresented: $showingImageReview) {
+            imageReviewView()
+        }
+    }
+    
+    private func capturePhoto() {
+        cameraViewModel.capturePhoto { image in
+            capturedImage = image
+            showingImageReview = true
+        }
+    }
+    
+    @ViewBuilder
+    private func imageReviewView() -> some View {
+        if let image = capturedImage {
+            ImageReviewView(image: image) { croppedImage in
+                // Handle the cropped image (e.g., send to AI for processing)
+                print("Cropped image received, size: \(croppedImage.size)")
             }
         }
     }
 }
 
-struct CameraPreviewView: UIViewRepresentable {
-    let session: AVCaptureSession
-
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView(frame: UIScreen.main.bounds)
-        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
-        previewLayer.frame = view.bounds
-        previewLayer.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer)
-        return view
-    }
-
-    func updateUIView(_ uiView: UIView, context: Context) {}
-}
